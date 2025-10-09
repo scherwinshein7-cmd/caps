@@ -1,0 +1,497 @@
+/* Root Variables */
+:root {
+    --university-red: #b71c1c;
+    --university-yellow: #fdd835;
+    --university-blue: #1976d2;
+    --university-gold: #ff8f00;
+    --text-dark: #333333;
+    --text-light: #ffffff;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.3);
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* Main Container */
+.main-container {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Section */
+.background-section {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+
+.university-bg {
+    flex: 1; /* This is good */
+    height: 700px; /* You must add a height! */
+    width: 100%; /* Or a width */
+    background: url('schoolgate.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+
+/* Sidebar */
+.sidebar {
+    width: 350px;
+    background: linear-gradient(135deg, var(--university-red) 0%, #d32f2f 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: -5px 0 20px var(--shadow-medium);
+    position: relative;
+    z-index: 10;
+}
+
+.sidebar-content {
+    text-align: center;
+    padding: 40px 20px;
+    width: 100%;
+}
+
+/* System Title */
+.system-title {
+    margin-bottom: 60px;
+}
+
+.system-title h1 {
+    color: var(--university-yellow);
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Custom Buttons */
+.btn-custom {
+    width: 200px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-custom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+}
+
+.btn-custom:hover::before {
+    left: 100%;
+}
+
+/* Login Button */
+.btn-login {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: var(--text-light);
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+    color: var(--text-light);
+}
+
+/* QR Code Button */
+.btn-qr {
+    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+    color: var(--text-light);
+}
+
+.btn-qr:hover {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(56, 142, 60, 0.4);
+    color: var(--text-light);
+}
+
+/* Login Page Styles */
+.login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+}
+
+.login-left {
+    background: linear-gradient(135deg, var(--university-red) 0%, #d32f2f 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    position: relative;
+}
+
+.login-left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="600" height="800" fill="url(%23grid)"/></svg>');
+    opacity: 0.1;
+}
+
+.university-branding {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.university-branding h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--university-yellow);
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.university-branding h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: var(--text-light);
+}
+
+.university-branding p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.login-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.login-form-container {
+    width: 100%;
+    max-width: 400px;
+    background: var(--text-light);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-light);
+}
+
+.login-form .form-control {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.login-form .form-control:focus {
+    border-color: var(--university-blue);
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+}
+
+.input-group-text {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+}
+
+.btn-login-form {
+    background: linear-gradient(135deg, var(--university-blue) 0%, #1565c0 100%);
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-login-form:hover {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+}
+
+/* QR Code Page Styles */
+.qr-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.qr-card {
+    background: var(--text-light);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-light);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.qr-scanner-area {
+    border: 2px dashed #e0e0e0;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    background: #fafafa;
+}
+
+.scanner-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+#qr-scanner-element {
+    max-width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.manual-input-section {
+    margin-top: 20px;
+}
+
+.manual-input-section h6 {
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        transition: left 0.3s ease;
+        z-index: 1000;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .background-section {
+        flex-direction: column;
+    }
+    
+    .university-bg {
+        position: relative;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    
+    .system-title h1 {
+        font-size: 1.8rem;
+    }
+    
+    .btn-custom {
+        width: 180px;
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+    
+    .login-container .row {
+        flex-direction: column-reverse;
+    }
+    
+    .login-left {
+        min-height: 200px;
+    }
+    
+    .university-branding h2 {
+        font-size: 2rem;
+    }
+    
+    .university-branding h3 {
+        font-size: 1.2rem;
+    }
+    
+    .login-form-container {
+        padding: 30px 20px;
+    }
+    
+    .qr-container {
+        padding: 20px 10px;
+    }
+    
+    .qr-card {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .system-title h1 {
+        font-size: 1.5rem;
+    }
+    
+    .btn-custom {
+        width: 160px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .university-branding h2 {
+        font-size: 1.8rem;
+    }
+    
+    .university-branding h3 {
+        font-size: 1.1rem;
+    }
+    
+    .university-branding p {
+        font-size: 1rem;
+    }
+}
+
+/* Animation Utilities */
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--university-red);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d32f2f;
+}
+
+/* Focus Styles for Accessibility */
+.btn:focus,
+.form-control:focus {
+    outline: 3px solid rgba(25, 118, 210, 0.5);
+    outline-offset: 2px;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--university-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .btn,
+    .qr-scanner-area {
+        display: none !important;
+    }
+    
+    .main-container,
+    .login-container,
+    .qr-container {
+        background: white !important;
+        color: black !important;
+    }
+}

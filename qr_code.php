@@ -1,0 +1,625 @@
+<?php
+// qr_code.php
+include 'includes/db_connection.php';
+
+// Handle search if serial is provided
+$equipmentDetails = '';
+if (isset($_GET['serial'])) {
+    $serial = trim($_GET['serial']);
+
+    // Join equipment with account (custody) and categories
+    // Join equipment with account (custody) and categories
+    $stmt = $conn->prepare("
+        SELECT e.*, 
+            CONCAT_WS(' ', a.firstname, a.middlename, a.lastname) AS full_name,
+            c.category AS category_name
+        FROM equipment e
+        LEFT JOIN account a ON e.custody = a.employee_id
+        LEFT JOIN categories c ON e.category_id = c.id
+        WHERE e.serial = ?
+    ");
+
+    $stmt->bind_param("s", $serial);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        $equipmentDetails = "<div class='equipment-card'>";
+        $equipmentDetails .= "<h3 class='equipment-title'>Equipment Details</h3>";
+        $equipmentDetails .= "<div class='detail-row'><span class='label'>Serial:</span> <span class='value'>" . htmlspecialchars($row['serial']) . "</span></div>";
+        $equipmentDetails .= "<div class='detail-row'><span class='label'>Description:</span> <span class='value'>" . htmlspecialchars($row['description']) . "</span></div>";
+        $equipmentDetails .= "<div class='detail-row'><span class='label'>Unit Value:</span> <span class='value'>" . htmlspecialchars($row['unit_value']) . "</span></div>";
+        $equipmentDetails .= "<div class='detail-row'><span class='label'>Category:</span> <span class='value'>" . htmlspecialchars($row['category_name'] ?? 'N/A') . "</span></div>";
+        $equipmentDetails .= "<div class='detail-row'><span class='label'>Room:</span> <span class='value'>" . htmlspecialchars($row['room']) . "</span></div>";
+        $equipmentDetails .= "<div class='detail-row'><span class='label'>Custody:</span> <span class='value'>" . htmlspecialchars($row['full_name'] ?? $row['custody']) . "</span></div>";
+        $equipmentDetails .= "<div class='detail-row'><span class='label'>Remarks:</span> <span class='value'>" . htmlspecialchars($row['remarks']) . "</span></div>";
+        $equipmentDetails .= "<div class='detail-row'><span class='label'>Date of Issuance:</span> <span class='value'>" . htmlspecialchars($row['date_of_issuance']) . "</span></div>";
+        if (!empty($row['qrcode'])) {
+            $equipmentDetails .= "<div class='qr-container'><img src='" . htmlspecialchars($row['qrcode']) . "' alt='QR Code' class='qr-image'></div>";
+        }
+        $equipmentDetails .= "</div>";
+    } else {
+        $equipmentDetails = "<div class='error-message'>No equipment found for serial: " . htmlspecialchars($serial) . "</div>";
+    }
+
+    $stmt->close();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner & Search</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            color: #333;
+            padding: 16px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+            padding: 24px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 24px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section h2 i {
+            color: #2196F3;
+        }
+
+        /* QR Scanner Styles */
+        #reader {
+            max-width: 100%;
+            margin: 0 auto;
+            border: 3px solid #2196F3;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #f8f9fa;
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        #reader:hover {
+            box-shadow: 0 12px 35px rgba(33, 150, 243, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Search Box */
+        .search-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 48px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Results Area */
+        #result {
+            margin-top: 24px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        /* Equipment Card */
+        .equipment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            text-align: left;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .equipment-title {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .detail-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f3f4;
+            align-items: flex-start;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .value {
+            color: #2c3e50;
+            word-break: break-word;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .qr-image {
+            max-width: 200px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #fff5f5;
+            color: #c53030;
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid #c53030;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #2196F3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                border-radius: 16px;
+            }
+
+            .header {
+                padding: 20px 16px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .section {
+                margin-bottom: 24px;
+            }
+
+            .section h2 {
+                font-size: 18px;
+            }
+
+            #reader {
+                border-width: 2px;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 16px;
+                font-size: 16px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .detail-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .label {
+                min-width: auto;
+                font-size: 14px;
+                color: #6c757d;
+            }
+
+            .equipment-card {
+                padding: 16px;
+            }
+
+            .equipment-title {
+                font-size: 20px;
+            }
+        }
+
+        /* Tablet Responsive Design */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                margin: 20px auto;
+            }
+
+            .search-container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            #reader {
+                max-width: 400px;
+            }
+        }
+
+        /* Large Screen Optimizations */
+        @media (min-width: 1025px) {
+            .container {
+                margin: 40px auto;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .content {
+                padding: 32px;
+            }
+
+            .detail-row {
+                padding: 16px 0;
+            }
+
+            .label {
+                min-width: 140px;
+            }
+        }
+
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 56px;
+                font-size: 18px;
+            }
+
+            .search-input {
+                min-height: 56px;
+                font-size: 18px;
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            }
+
+            .container {
+                background: rgba(30, 30, 30, 0.95);
+                color: #e0e0e0;
+            }
+
+            .section h2 {
+                color: #f0f0f0;
+            }
+
+            .equipment-card {
+                background: #2a2a2a;
+                color: #e0e0e0;
+            }
+
+            .equipment-title {
+                color: #f0f0f0;
+                border-bottom-color: #404040;
+            }
+
+            .label {
+                color: #b0b0b0;
+            }
+
+            .value {
+                color: #e0e0e0;
+            }
+
+            .detail-row {
+                border-bottom-color: #404040;
+            }
+
+            #result {
+                background: #2a2a2a;
+                color: #b0b0b0;
+            }
+
+            .search-input {
+                background: #2a2a2a;
+                border-color: #404040;
+                color: #e0e0e0;
+            }
+
+            .search-input:focus {
+                border-color: #2196F3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-qrcode"></i> Equipment Lookup</h1>
+            <p>Scan QR codes or search by serial number</p>
+        </div>
+
+        <div class="content">
+            <!-- QR Scanner Section -->
+            <div class="section">
+                <h2><i class="fas fa-camera"></i> Scan QR Code with Camera</h2>
+                <div id="reader"></div>
+            </div>
+
+            <!-- Manual Search Section -->
+            <div class="section">
+                <h2><i class="fas fa-search"></i> Enter Serial Number</h2>
+                <div class="search-container">
+                    <input type="text" id="serialInput" class="search-input" placeholder="Enter Serial Number">
+                    <button onclick="searchSerial()" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="result">
+                <?php
+                    if (!empty($equipmentDetails)) {
+                        echo $equipmentDetails;
+                    } else {
+                        echo '<i class="fas fa-info-circle"></i> Scan a QR code using your camera or type serial number to see equipment details...';
+                    }
+                ?>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions">
+                <a href="index.php" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+                <a href="qr_code.php" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Refresh
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // QR SCAN SUCCESS
+        function onScanSuccess(decodedText) {
+            // Show loading state
+            document.getElementById('result').innerHTML = '<div style="text-align: center;"><div class="loading"></div> Processing scan...</div>';
+            
+            // Redirect after brief delay for UX
+            setTimeout(() => {
+                window.location.href = "?serial=" + encodeURIComponent(decodedText);
+            }, 500);
+        }
+
+        // Initialize camera scanner only
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { 
+                fps: 10, 
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            },
+            false
+        );
+        html5QrcodeScanner.render(onScanSuccess);
+
+        // MANUAL SEARCH FUNCTION
+        function searchSerial() {
+            let serial = document.getElementById("serialInput").value.trim();
+            if (serial.length === 0) {
+                alert("Please enter a serial number.");
+                return;
+            }
+            
+            // Show loading state
+            document.getElementById('result').innerHTML = '<div style="text-align: center;"><div class="loading"></div> Searching...</div>';
+            
+            // Redirect after brief delay for UX
+            setTimeout(() => {
+                window.location.href = "?serial=" + encodeURIComponent(serial);
+            }, 500);
+        }
+
+        // Enable Enter key for search
+        document.getElementById("serialInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchSerial();
+            }
+        });
+
+        // Auto-focus search input on mobile devices
+        if (window.innerWidth <= 768) {
+            document.getElementById("serialInput").addEventListener("focus", function() {
+                setTimeout(() => {
+                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            });
+        }
+    </script>
+    <?php include 'includes/footer.php'; ?>
+</body>
+</html>

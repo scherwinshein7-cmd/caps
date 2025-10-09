@@ -1,0 +1,65 @@
+/* General Page Styling */
+body.dashboard-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(120deg, #eef2f3, #d9e4f5);
+    color: #2c3e50;
+    min-height: 100vh;
+    padding-bottom: 30px;
+}
+
+/* Welcome Section */
+.welcome-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+.welcome-section h4 { margin: 0; font-weight: 600; }
+.user-avatar i { color: #3498db; }
+
+/* Stat Cards */
+.stat-card {
+    border-radius: 14px;
+    padding: 25px 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+.stat-card-blue {
+    background: linear-gradient(135deg, #3498db, #2c82c9);
+}
+.stat-number { font-size: 2.8rem; margin-bottom: 5px; }
+.stat-label { font-size: 1.1rem; opacity: 0.9; }
+
+/* Chart Section */
+.chart-container {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease-in-out;
+}
+.chart-container:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+.chart-title { font-weight: 600; color: #2c3e50; }
+
+/* Dropdown Styling */
+form select {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+form select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 6px rgba(52,152,219,0.4);
+    outline: none;
+}

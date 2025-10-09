@@ -1,0 +1,347 @@
+
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Login Page Styles */
+.login-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-page .card {
+    border: none;
+    border-radius: 15px;
+}
+
+.login-page .btn-primary {
+    background-color: #0066cc;
+    border-color: #0066cc;
+    padding: 12px;
+    font-weight: 600;
+}
+
+.login-page .btn-primary:hover {
+    background-color: #0052a3;
+    border-color: #0052a3;
+}
+
+
+
+/* Dashboard Styles */
+.dashboard-page {
+    background-color: #f1f5f9;
+}
+
+.breadcrumb-section {
+    padding: 20px 0 10px 0;
+}
+
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-item a {
+    color: #64748b;
+    text-decoration: none;
+}
+
+.welcome-section {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.welcome-section h4 {
+    margin: 0;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.user-avatar {
+    color: #64748b;
+}
+
+/* Stat Cards */
+.stat-card {
+    background-color: #1e40af;
+    color: white;
+    padding: 30px 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stat-card-blue {
+    background-color: #1e40af;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+.stat-action {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.stat-action:hover {
+    opacity: 1;
+}
+
+/* Chart Container */
+.chart-container {
+    background-color: #1e40af;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.chart-title {
+    color: white;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Action Cards (Faculty) */
+.action-card {
+    padding: 40px 20px;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.action-card-dark {
+    background-color: #1e293b;
+    color: white;
+}
+
+.action-card-teal {
+    background-color: #0891b2;
+    color: white;
+}
+
+.action-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.action-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Calendar Widget */
+.calendar-widget {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header h5 {
+    margin: 0;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 5px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: 600;
+    color: #64748b;
+    padding: 8px 4px;
+    font-size: 0.9rem;
+}
+
+.calendar-day {
+    text-align: center;
+    padding: 8px 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.calendar-day:hover {
+    background-color: #e2e8f0;
+}
+
+.calendar-day.other-month {
+    color: #cbd5e1;
+}
+
+.calendar-day.today {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* Footer */
+.main-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    /* Navbar & Header */
+    .main-header .navbar-nav {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .main-header .nav-link {
+        margin: 8px 0;
+        width: 100%;
+    }
+
+    .main-header .btn-light {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 15px;
+    }
+
+    .welcome-section h4 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Tablet and smaller screens */
+@media (max-width: 768px) {
+    .stat-card {
+        padding: 20px 15px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+    }
+
+    .action-card {
+        margin-bottom: 15px;
+        padding: 25px 15px;
+    }
+
+    .action-icon {
+        font-size: 2rem;
+    }
+
+    .action-text {
+        font-size: 1rem;
+    }
+
+    /* Chart Container */
+    .chart-container {
+        padding: 15px;
+    }
+
+    .chart-title {
+        font-size: 1rem;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 576px) {
+    body {
+        font-size: 14px;
+    }
+
+    .login-page .card {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .login-page .btn-primary {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .stat-card {
+        font-size: 0.9rem;
+    }
+
+    .calendar-day, .calendar-day-header {
+        font-size: 0.7rem;
+        padding: 6px 2px;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+/* Responsive adjustments */
+
